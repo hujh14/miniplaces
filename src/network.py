@@ -16,9 +16,10 @@ class Network:
 
     def __init__(self, lr=1e-3, checkpoint=None):
         if checkpoint is not None:
-            print("Loading from checkpoint %s" % checkpoint)
+            print "Loading from checkpoint: ", checkpoint 
             self.model = load_model(checkpoint)
         else:
+            print "Building new model"
             self.model = self.build_resnet(lr)
 
     def build_resnet(self, lr):

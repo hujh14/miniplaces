@@ -35,11 +35,13 @@ def open_im_list(list_path):
     labels = {}
     for line in open(list_path, 'r'):
         line = line.rstrip()
-        im = line.split()[0]
-        c = line.split()[1]
-
+        split = line.split()
+        im = split[0]
         im_list.append(im)
-        labels[im] = int(c)
+
+        if len(split) == 2:
+            c = line.split()[1]
+            labels[im] = int(c)
     return im_list, labels
 
 

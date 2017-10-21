@@ -10,13 +10,14 @@ from keras.callbacks import ModelCheckpoint
 import tensorflow as tf
 
 from data_loader import DataLoader
+from network import Network
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--checkpoint', type=str, required=True, help="Checkpoint to run")
+    parser.add_argument('-c', '--checkpoint', type=str, help="Checkpoint to run")
     parser.add_argument('-s', '--split', type=str, required=True, help="Split to run on")
-    parser.add_argument('-o', '--output_path', type=str, required=True, help="Output path")
+    parser.add_argument('-o', '--output_path', type=str, default="output.txt", help="Output path")
     parser.add_argument('--id', default="0")
     args = parser.parse_args()
 
@@ -37,10 +38,12 @@ if __name__ == "__main__":
             predictions = network.predict(img)
 
             # Write output
+            predictions = [str(c) for c in predictions]
             output = "{} {}".format(im, " ".join(predictions))
+            
             print output
-            # with open(args.output_path, 'w') as f:
-            #     f.write(output)
+            with open(args.output_path, 'a') as f:
+                f.write(output + '\n')
 
 
 
