@@ -23,7 +23,7 @@ def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
     print("Training...")
     network.model.fit_generator(generator, 1000, epochs=100, callbacks=callbacks_list,
              verbose=1, workers=6, use_multiprocessing=True, initial_epoch=initial_epoch,
-             validation_data=generator_val, validation_steps=1000)
+             validation_data=generator_val, validation_steps=50)
 
 
 if __name__ == "__main__":

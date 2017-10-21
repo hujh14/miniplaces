@@ -8,7 +8,6 @@ from keras.layers import Input, Dense, Flatten
 from keras.optimizers import SGD
 from keras import backend as K
 from keras.models import Model, load_model
-from keras.utils import plot_model
 import tensorflow as tf
 
 import image_utils
@@ -30,8 +29,6 @@ class Network:
         model.compile(optimizer=sgd,
                         loss="categorical_crossentropy",
                         metrics=['accuracy'])
-
-        plot_model(model, to_file='model.png')
         return model
 
     def predict(self, img):
