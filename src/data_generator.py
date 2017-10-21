@@ -66,7 +66,7 @@ def add_augmentations(img):
 if __name__ == "__main__":
     split = "train"
     data_loader = DataLoader(split)
-    generator = DataGenerator(data_loader)
+    generator = DataGenerator(data_loader, augment=True)
 
     data, label = generator.next()
     print data.shape

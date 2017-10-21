@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import misc
 
-DATA_MEAN = np.array([ 115.85304361  111.24224437  103.18997383])
+DATA_MEAN = np.array([ 115.85304361,  111.24224437,  103.18997383])
 INPUT_SHAPE = (224, 224)
 
 def preprocess_image(img):
