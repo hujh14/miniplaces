@@ -14,7 +14,7 @@ from data_generator import DataGenerator
 from network import Network
 
 def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
-    filename = "weights.{epoch:02d}-{loss:.4f}.hdf5"
+    filename = "weights.{epoch:02d}-{loss:.4f}-{acc:.4f}.hdf5"
     checkpoint_path = os.path.join(checkpoint_dir, filename)
 
     checkpoint = ModelCheckpoint(checkpoint_path, monitor='loss')
@@ -23,7 +23,7 @@ def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
     print("Training...")
     network.model.fit_generator(generator, 1000, epochs=100, callbacks=callbacks_list,
              verbose=1, workers=6, use_multiprocessing=True, initial_epoch=initial_epoch,
-             validation_data=generator_val, validation_steps=50)
+             validation_data=generator_val, validation_steps=25)
 
 
 if __name__ == "__main__":
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     data_loader = DataLoader("train")
     data_loader_val = DataLoader("val")
     generator = DataGenerator(data_loader, augment=args.augment)
-    generator_val = DataGenerator(data_loader, augment=False)
+    generator_val = DataGenerator(data_loader_val, augment=False)
 
     # Load checkpoint
     checkpoint_dir = "../checkpoint/{}/{}".format(args.name, args.learning_rate)

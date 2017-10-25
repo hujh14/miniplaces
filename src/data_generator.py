@@ -33,7 +33,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def DataGenerator(data_loader, batch_size=8, augment=False):
+def DataGenerator(data_loader, batch_size=32, augment=False):
     while True:
         imgs = []
         labels = []

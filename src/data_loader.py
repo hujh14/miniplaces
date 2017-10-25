@@ -53,6 +53,7 @@ if __name__ == "__main__":
     for n, im in enumerate(data_loader.im_list):
         print n, im
         img = data_loader.get_image(im)
+        data_loader.get_label(im)
         mean_pixel = np.mean(img, axis=(0,1))
         means.append(mean_pixel)
 

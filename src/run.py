@@ -27,21 +27,28 @@ if __name__ == "__main__":
 
     sess = tf.Session()
     K.set_session(sess)
-
     with sess.as_default():
         print(args)
 
         network = Network(checkpoint=args.checkpoint)
+        open(args.output_path, 'w').close()
 
-        for im in data_loader.im_list:
+        top1 = 0
+        top5 = 0
+        for n, im in enumerate(data_loader.im_list):
             img = data_loader.get_image(im)
-            predictions = network.predict(img)
+            ans = data_loader.labels[im]
 
+            predictions = network.predict(img)
             # Write output
-            predictions = [str(c) for c in predictions]
-            output = "{} {}".format(im, " ".join(predictions))
+            output = "{} {}".format(im, " ".join([str(c) for c in predictions]))
             
-            print output
+            if ans == predictions[0]:
+                top1 += 1
+            if ans in predictions:
+                top5 += 1
+
+            print output, 1.*top1/(n+1), 1.*top5/(n+1)
             with open(args.output_path, 'a') as f:
                 f.write(output + '\n')
 
