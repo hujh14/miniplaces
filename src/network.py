@@ -24,11 +24,11 @@ class Network:
 
     def build_resnet(self, lr):
         inp = Input((224,224,3))
-        #model = ResNet50(input_tensor=inp, weights=None, classes=100)
-        model = ResNet50(input_tensor=inp, weights='imagenet', include_top=False)
-        x = Flatten()(model.outputs[0])
-        output = Dense(100, activation='softmax')(x)
-        model = Model(inputs=inp, outputs=output)
+        model = ResNet50(input_tensor=inp, weights=None, classes=100)
+        # model = ResNet50(input_tensor=inp, weights='imagenet', include_top=False)
+        # x = Flatten()(model.outputs[0])
+        # output = Dense(100, activation='softmax')(x)
+        # model = Model(inputs=inp, outputs=output)
 
         sgd = SGD(lr=lr, momentum=0.9, nesterov=True)
         model.compile(optimizer=sgd,

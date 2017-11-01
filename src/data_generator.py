@@ -33,7 +33,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def DataGenerator(data_loader, batch_size=32, augment=False):
+def DataGenerator(data_loader, batch_size=32, flip=False, crop=True):
     while True:
         imgs = []
         labels = []
@@ -43,30 +43,42 @@ def DataGenerator(data_loader, batch_size=32, augment=False):
             label = data_loader.get_label(im)
 
             img = image_utils.preprocess_image(img)
-            # Data augmentations
-            if augment:
-                img = add_augmentations(img)
 
+            # Data augmentations
+            if flip:
+                if random.randint(0,1) == 0:
+                    # Flip image lr
+                    img = np.flip(img, axis=1)
             imgs.append(img)
             labels.append(label)
 
-        data = np.stack(imgs, axis=0)
-        label = np.stack(labels, axis=0)
-        yield (data, label)
-def add_augmentations(img):
-    if random.randint(0,1) == 0:
-        # Flip image lr
-        img = np.flip(img, axis=0)
-    if random.randint(0,1) == 0:
-        # Flip image up
-        img = np.flip(img, axis=1)
-    return img
+            if crop:
+                img = crop_split(img)
+                label = [label, label, label, label]
+                imgs.extend(img)
+                labels.extend(label)
 
+        data = np.stack(imgs[:batch_size], axis=0)
+        label = np.stack(labels[:batch_size], axis=0)
+        yield (data, label)
+
+def crop_split(img):
+    h,w = img.shape[:2]
+    f = 0.875
+    fh = int(f*h)
+    fw = int(f*w)
+    tl = img[:fh,:fw,:]
+    tr = img[h-fh:,:fw,:]
+    bl = img[:fh,w-fw:,:]
+    br = img[h-fh:,w-fw:,:]
+    imgs = [tl,tr,bl,br]
+    imgs = [misc.imresize(img, (h,w)) for img in imgs]
+    return imgs
 
 if __name__ == "__main__":
     split = "train"
     data_loader = DataLoader(split)
-    generator = DataGenerator(data_loader, augment=True)
+    generator = DataGenerator(data_loader, flip=True, crop=True)
 
     data, label = generator.next()
     print data.shape

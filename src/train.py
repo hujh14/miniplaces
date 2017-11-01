@@ -14,7 +14,7 @@ from data_generator import DataGenerator
 from network import Network
 
 def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
-    filename = "weights.{epoch:02d}-{loss:.4f}-{acc:.4f}.hdf5"
+    filename = "weights.{epoch:02d}-{acc:.4f}-{val_acc:.4f}.hdf5"
     checkpoint_path = os.path.join(checkpoint_dir, filename)
 
     checkpoint = ModelCheckpoint(checkpoint_path, monitor='loss')
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', type=str, required=True, help="Name to identify this model")
     parser.add_argument('-lr', '--learning_rate', type=float, default=1e-3, help="Learning rate")
-    parser.add_argument('--augment', action='store_true', default=False)
+    parser.add_argument('--flip', action='store_true', default=False)
+    parser.add_argument('--crop', action='store_true', default=False)
     parser.add_argument('--resume', action='store_true', default=False)
     parser.add_argument('--id', default="0")
     args = parser.parse_args()
@@ -40,8 +41,8 @@ if __name__ == "__main__":
 
     data_loader = DataLoader("train")
     data_loader_val = DataLoader("val")
-    generator = DataGenerator(data_loader, augment=args.augment)
-    generator_val = DataGenerator(data_loader_val, augment=False)
+    generator = DataGenerator(data_loader, flip=args.flip, crop=args.crop)
+    generator_val = DataGenerator(data_loader_val, flip=False, crop=False)
 
     # Load checkpoint
     checkpoint_dir = "../checkpoint/{}/{}".format(args.name, args.learning_rate)
