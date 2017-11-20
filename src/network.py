@@ -5,7 +5,7 @@ from scipy import misc
 
 from keras.applications.resnet50 import ResNet50
 from keras.layers import Input, Dense, Flatten
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adam
 from keras import backend as K
 from keras.models import Model, load_model
 import tensorflow as tf
@@ -30,8 +30,9 @@ class Network:
         # output = Dense(100, activation='softmax')(x)
         # model = Model(inputs=inp, outputs=output)
 
-        sgd = SGD(lr=lr, momentum=0.9, nesterov=True)
-        model.compile(optimizer=sgd,
+        # opt = SGD(lr=lr, momentum=0.9, nesterov=True)
+        opt = Adam()
+        model.compile(optimizer=opt,
                         loss="categorical_crossentropy",
                         metrics=['accuracy'])
         return model
@@ -43,6 +44,18 @@ class Network:
         prediction = self.model.predict(input_data)[0]
 
         top5 = self.get_top5(prediction)
+        return top5
+
+    def predict_cropped(self, img):
+        img = image_utils.preprocess_image(img)
+        cropped = image_utils.crop_split(img)
+        cropped.append(img)
+        input_data = np.stack(cropped, axis=0)
+
+        predictions = self.model.predict(input_data)
+        avg_predictions = np.mean(predictions, axis=0)
+
+        top5 = self.get_top5(avg_predictions)
         return top5
 
     def get_top5(self, predictions):

@@ -13,3 +13,16 @@ def preprocess_image(img):
     centered_img = f_img - DATA_MEAN
     resized_img = misc.imresize(centered_img, INPUT_SHAPE)
     return resized_img
+
+def crop_split(img):
+    h,w = img.shape[:2]
+    f = 0.875
+    fh = int(f*h)
+    fw = int(f*w)
+    tl = img[:fh,:fw,:]
+    tr = img[h-fh:,:fw,:]
+    bl = img[:fh,w-fw:,:]
+    br = img[h-fh:,w-fw:,:]
+    imgs = [tl,tr,bl,br]
+    imgs = [misc.imresize(img, (h,w)) for img in imgs]
+    return imgs

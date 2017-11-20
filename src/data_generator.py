@@ -33,52 +33,43 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def DataGenerator(data_loader, batch_size=32, flip=False, crop=True):
+def DataGenerator(data_loader, batch_size=32, crop=True, train=True):
     while True:
-        imgs = []
+        datas = []
         labels = []
-        while len(imgs) < batch_size:
+        while len(datas) < batch_size:
             im = data_loader.random_im()
             img = data_loader.get_image(im)
             label = data_loader.get_label(im)
 
             img = image_utils.preprocess_image(img)
 
-            # Data augmentations
-            if flip:
-                if random.randint(0,1) == 0:
-                    # Flip image lr
-                    img = np.flip(img, axis=1)
-            imgs.append(img)
-            labels.append(label)
-
+            data = [img]
             if crop:
-                img = crop_split(img)
-                label = [label, label, label, label]
-                imgs.extend(img)
-                labels.extend(label)
+                crops = image_utils.crop_split(img)
+                data.extend(crops)
 
-        data = np.stack(imgs[:batch_size], axis=0)
+            if train:
+                # Choose 1
+                d = random.choice(data)
+                # Flip image lr
+                if random.randint(0,1) == 0:
+                    d = np.flip(d, axis=1)
+                data = [d]
+
+            datas.extend(data)
+            for i in xrange(len(data)):
+                labels.append(label)
+
+        data = np.stack(datas[:batch_size], axis=0)
         label = np.stack(labels[:batch_size], axis=0)
         yield (data, label)
 
-def crop_split(img):
-    h,w = img.shape[:2]
-    f = 0.875
-    fh = int(f*h)
-    fw = int(f*w)
-    tl = img[:fh,:fw,:]
-    tr = img[h-fh:,:fw,:]
-    bl = img[:fh,w-fw:,:]
-    br = img[h-fh:,w-fw:,:]
-    imgs = [tl,tr,bl,br]
-    imgs = [misc.imresize(img, (h,w)) for img in imgs]
-    return imgs
 
 if __name__ == "__main__":
     split = "train"
     data_loader = DataLoader(split)
-    generator = DataGenerator(data_loader, flip=True, crop=True)
+    generator = DataGenerator(data_loader, crop=True, train=False)
 
     data, label = generator.next()
     print data.shape
