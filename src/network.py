@@ -15,15 +15,15 @@ from resnet import ResnetBuilder
 
 class Network:
 
-    def __init__(self, lr=1e-3, checkpoint=None):
+    def __init__(self, model_name=None, lr=1e-3, checkpoint=None):
         if checkpoint is not None:
             print "Loading from checkpoint: ", checkpoint 
             self.model = load_model(checkpoint)
         else:
             print "Building new model"
-            self.model = self.build_resnet(lr)
+            self.model = self.build_resnet(model_name, lr)
 
-    def build_resnet(self, lr):
+    def build_resnet(self, model_name, lr):
         input_shape = (128,128,3)
         num_outputs = 100
         model = None
