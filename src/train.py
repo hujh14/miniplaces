@@ -30,6 +30,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', type=str, required=True, help="Name to identify this model")
     parser.add_argument('-lr', '--learning_rate', type=float, default=None, help="Learning rate")
+    parser.add_argument('-m', '--model', type=str, help="Model")
     parser.add_argument('--augment', action='store_true', default=False)
     parser.add_argument('--resume', action='store_true', default=False)
     parser.add_argument('--id', default="0")
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     K.set_session(sess)
     with sess.as_default():
         print(args)
-        network = Network(lr=args.learning_rate, checkpoint=checkpoint)
+        network = Network(model=args.model, lr=args.learning_rate, checkpoint=checkpoint)
 
         train(network, generator, generator_val, checkpoint_dir, initial_epoch=epoch)
 
