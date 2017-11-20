@@ -11,6 +11,7 @@ from keras.models import Model, load_model
 import tensorflow as tf
 
 import image_utils
+from resnet import ResnetBuilder
 
 class Network:
 
@@ -23,12 +24,20 @@ class Network:
             self.model = self.build_resnet(lr)
 
     def build_resnet(self, lr):
-        inp = Input((224,224,3))
-        model = ResNet50(input_tensor=inp, weights=None, classes=100)
-        # model = ResNet50(input_tensor=inp, weights='imagenet', include_top=False)
-        # x = Flatten()(model.outputs[0])
-        # output = Dense(100, activation='softmax')(x)
-        # model = Model(inputs=inp, outputs=output)
+        input_shape = (128,128,3)
+        num_outputs = 100
+        model = None
+        if model_name == "resnet18":
+            model = ResnetBuilder.build_resnet_18(input_shape, num_outputs)
+        elif model_name == "resnet34":
+            model = ResnetBuilder.build_resnet_34(input_shape, num_outputs)
+        elif model_name == "resnet50":
+            model = ResnetBuilder.build_resnet_50(input_shape, num_outputs)
+        elif model_name == "resnet50_keras":
+            inp = Input((224,224,3))
+            model = ResNet50(input_tensor=inp, weights=None, classes=100)
+        else:
+            raise
 
         # opt = SGD(lr=lr, momentum=0.9, nesterov=True)
         opt = Adam()
