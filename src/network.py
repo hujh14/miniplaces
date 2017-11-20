@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 from scipy import misc
 
+from keras.applications.resnet50 import ResNet50
 from keras.layers import Input, Dense, Flatten
 from keras.optimizers import SGD, Adam
 from keras import backend as K
@@ -32,13 +33,13 @@ class Network:
             model = ResnetBuilder.build_resnet_34(input_shape, num_outputs)
         elif model_name == "resnet50":
             model = ResnetBuilder.build_resnet_50(input_shape, num_outputs)
+        elif model_name == "resnet50_keras":
+            inp = Input((224,224,3))
+            model = ResNet50(input_tensor=inp, weights=None, classes=100)
         else:
             raise
 
-        # inp = Input((224,224,3))
-        # model = ResNet50(input_tensor=inp, weights=None, classes=100)
         # opt = SGD(lr=lr, momentum=0.9, nesterov=True)
-
         opt = Adam()
         model.compile(optimizer=opt,
                         loss="categorical_crossentropy",

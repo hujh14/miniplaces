@@ -42,7 +42,7 @@ if __name__ == "__main__":
     data_loader = DataLoader("train")
     data_loader_val = DataLoader("val")
     generator = DataGenerator(data_loader, use_augment=args.augment)
-    generator_val = DataGenerator(data_loader_val, use_augment=args.augment)
+    generator_val = DataGenerator(data_loader_val, use_augment=False)
 
     # Load checkpoint
     checkpoint_dir = "../checkpoint/" + args.name
