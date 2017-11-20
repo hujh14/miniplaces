@@ -29,8 +29,7 @@ def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', type=str, required=True, help="Name to identify this model")
-    parser.add_argument('-lr', '--learning_rate', type=float, default=1e-3, help="Learning rate")
-    # parser.add_argument('--flip', action='store_true', default=False)
+    parser.add_argument('-lr', '--learning_rate', type=float, default=None, help="Learning rate")
     parser.add_argument('--crop', action='store_true', default=False)
     parser.add_argument('--resume', action='store_true', default=False)
     parser.add_argument('--id', default="0")
@@ -45,7 +44,9 @@ if __name__ == "__main__":
     generator_val = DataGenerator(data_loader_val, crop=args.crop, train=False)
 
     # Load checkpoint
-    checkpoint_dir = "../checkpoint/{}/{}".format(args.name, args.learning_rate)
+    checkpoint_dir = "../checkpoint/" + args.name
+    if args.learning_rate is not None:
+        checkpoint_dir += "/" + args.learning_rate
     if not os.path.isdir(checkpoint_dir):
         os.makedirs(checkpoint_dir)
     checkpoint, epoch = (None, 0)
