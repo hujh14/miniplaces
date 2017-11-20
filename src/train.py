@@ -21,7 +21,7 @@ def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
     callbacks_list = [checkpoint]
 
     print("Training...")
-    network.model.fit_generator(generator, 2000, epochs=100, callbacks=callbacks_list,
+    network.model.fit_generator(generator, 1000, epochs=100, callbacks=callbacks_list,
              verbose=1, workers=6, use_multiprocessing=True, initial_epoch=initial_epoch,
              validation_data=generator_val, validation_steps=50)
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', type=str, required=True, help="Name to identify this model")
     parser.add_argument('-lr', '--learning_rate', type=float, default=None, help="Learning rate")
-    parser.add_argument('--crop', action='store_true', default=False)
+    parser.add_argument('--augment', action='store_true', default=False)
     parser.add_argument('--resume', action='store_true', default=False)
     parser.add_argument('--id', default="0")
     args = parser.parse_args()
@@ -40,8 +40,8 @@ if __name__ == "__main__":
 
     data_loader = DataLoader("train")
     data_loader_val = DataLoader("val")
-    generator = DataGenerator(data_loader, crop=args.crop, train=True)
-    generator_val = DataGenerator(data_loader_val, crop=args.crop, train=False)
+    generator = DataGenerator(data_loader, use_augment=args.augment)
+    generator_val = DataGenerator(data_loader_val, use_augment=args.augment)
 
     # Load checkpoint
     checkpoint_dir = "../checkpoint/" + args.name

@@ -7,6 +7,7 @@ from scipy import misc
 
 import utils
 import image_utils
+import augment
 from data_loader import DataLoader
 
 class threadsafe_iter:
@@ -33,7 +34,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def DataGenerator(data_loader, batch_size=32, crop=True, train=True):
+def DataGenerator(data_loader, batch_size=32, use_augment=True):
     while True:
         datas = []
         labels = []
@@ -45,17 +46,10 @@ def DataGenerator(data_loader, batch_size=32, crop=True, train=True):
             img = image_utils.preprocess_image(img)
 
             data = [img]
-            if crop:
-                crops = image_utils.crop_split(img)
-                data.extend(crops)
-
-            if train:
-                # Choose 1
-                d = random.choice(data)
-                # Flip image lr
-                if random.randint(0,1) == 0:
-                    d = np.flip(d, axis=1)
-                data = [d]
+            if use_augment:
+                augmentations = augment.get_augmentations(img)
+                data.extend(augmentations)
+                data = random.sample(data, 4)
 
             datas.extend(data)
             for i in xrange(len(data)):
@@ -69,7 +63,7 @@ def DataGenerator(data_loader, batch_size=32, crop=True, train=True):
 if __name__ == "__main__":
     split = "train"
     data_loader = DataLoader(split)
-    generator = DataGenerator(data_loader, crop=True, train=False)
+    generator = DataGenerator(data_loader, use_augment=True)
 
     data, label = generator.next()
     print data.shape
