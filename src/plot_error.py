@@ -28,7 +28,7 @@ def get_accuracies(folder):
 
 folder = sys.argv[1]
 output = sys.argv[2]
-print output
+
 t_acc, v_acc = get_accuracies(folder)
 t_acc = range(10)
 v_acc = range(0,20,2)
