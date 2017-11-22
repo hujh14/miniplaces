@@ -26,7 +26,7 @@ if __name__ == "__main__":
     data_loader = DataLoader(args.split)
 
     sess = tf.Session()
-    K.set_session(sess)
+   K.set_session(sess)
     with sess.as_default():
         print(args)
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
             if ans in predictions:
                 top5 += 1
 
-            print output, 1.*top1/(n+1), 1.*top5/(n+1)
+            print output, 1-1.*top1/(n+1), 1-1.*top5/(n+1)
             with open(args.output_path, 'a') as f:
                 f.write(output + '\n')
 

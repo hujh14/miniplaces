@@ -2,6 +2,9 @@ import os
 import random
 import numpy as np
 from scipy import misc
+import matplotlib.pyplot as plt
+import cv2
+import xmltodict
 
 import utils
 
@@ -15,6 +18,7 @@ class DataLoader:
         self.im_list, self.labels = open_im_list(im_list_path)
 
         self.image_dir = os.path.join(DATA_DIR, "images")
+        self.objects_dir = os.path.join(DATA_DIR, "objects")
 
     def random_im(self):
         return random.choice(self.im_list)
@@ -22,6 +26,10 @@ class DataLoader:
     def get_image(self, im):
         path = os.path.join(self.image_dir, im)
         img = misc.imread(path)
+
+        imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        ret,thresh = cv2.threshold(imgray,127,255,0)
+        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
         return img
 
     def get_label(self, im):
@@ -29,6 +37,11 @@ class DataLoader:
         label = np.zeros(NUM_CLASS)
         label[c] = 1
         return label
+    def get_object_mask(self, im):
+        path = os.path.join(self.objects_dir, im.replace('.jpg', '.xml'))
+        object_mask = load_object_mask(path)
+        return object_mask
+
 
 def open_im_list(list_path):
     im_list = []
@@ -44,6 +57,38 @@ def open_im_list(list_path):
             labels[im] = int(c)
     return im_list, labels
 
+def load_object_mask(path):
+    objects = load_objects(path)
+    mask = np.zeros((128,128,175), dtype="uint8")
+    for c in objects:
+        c_mask = np.zeros((128,128), dtype='uint8')
+        for pts in objects[c]:
+            cnt = np.array(pts, dtype=int)
+            cnt = cnt[:,np.newaxis,:]
+            cv2.drawContours(c_mask, [cnt], -1, (255,255,255), -1)
+        mask[:,:,c-1] = c_mask
+    return mask
+
+def load_objects(path):
+    objects = {}
+    with open(path, 'r') as f:
+        data = f.read()
+        data = "<root>" + data + "</root>"
+        tree = xmltodict.parse(data)
+        objs = tree["root"]["objects"]
+        for obj in objs:
+            c = int(obj["class"])
+            polygon = obj["polygon"]
+            points = []
+            for pt in polygon["pt"]:
+                x = pt["x"]
+                y = pt["y"]
+                points.append((x,y))
+
+            if c not in objects:
+                objects[c] = []
+            objects[c].append(points)
+    return objects
 
 if __name__ == "__main__":
     split = "train"
@@ -54,6 +99,7 @@ if __name__ == "__main__":
         print n, im
         img = data_loader.get_image(im)
         data_loader.get_label(im)
+        data_loader.get_object_mask(im)
         mean_pixel = np.mean(img, axis=(0,1))
         means.append(mean_pixel)
 
