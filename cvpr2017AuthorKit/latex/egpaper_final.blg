@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: egpaper_final.aux
+The style file: ieee.bst
+Database file #1: egbib.bib
+Name 1 in "A. Krizhevsky, I. Sutskever, and G. E. Hinton" has a comma at the end for entry alexnet
+while executing---line 1073 of file ieee.bst
+Name 1 in "A. Krizhevsky, I. Sutskever, and G. E. Hinton" has a comma at the end for entry alexnet
+while executing---line 1116 of file ieee.bst
+You've used 5 entries,
+            2120 wiz_defined-function locations,
+            524 strings with 4545 characters,
+and the built_in function-call counts, 1605 in all, are:
+= -- 142
+> -- 125
+< -- 0
++ -- 49
+- -- 44
+* -- 117
+:= -- 309
+add.period$ -- 15
+call.type$ -- 5
+change.case$ -- 37
+chr.to.int$ -- 0
+cite$ -- 5
+duplicate$ -- 50
+empty$ -- 86
+format.name$ -- 44
+if$ -- 304
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 10
+pop$ -- 31
+preamble$ -- 1
+purify$ -- 32
+quote$ -- 0
+skip$ -- 40
+stack$ -- 0
+substring$ -- 25
+swap$ -- 5
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 20
+warning$ -- 0
+while$ -- 10
+width$ -- 6
+write$ -- 55
+(There were 2 error messages)

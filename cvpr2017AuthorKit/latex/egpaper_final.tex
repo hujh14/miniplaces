@@ -6,7 +6,6 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
-
 % Include other packages here, before hyperref.
 
 % If you comment hyperref and then uncomment it, you should delete
@@ -25,22 +24,13 @@
 \begin{document}
 
 %%%%%%%%% TITLE
-\title{\LaTeX\ Author Guidelines for CVPR Proceedings}
+\title{ResNet on Miniplaces Dataset}
 
-\author{First Author\\
-Institution1\\
-Institution1 address\\
-{\tt\small firstauthor@i1.org}
-% For a paper whose authors are all at the same institution,
-% omit the following lines up until the closing ``}''.
-% Additional authors and addresses can be added with ``\and'',
-% just like the second author.
-% To save space, use either the email address or home page, not both
-\and
-Second Author\\
-Institution2\\
-First line of institution2 address\\
-{\tt\small secondauthor@i2.org}
+\author{Jeffrey Hu\\
+MIT\\
+77 Massachusetts Ave, Cambridge, MA\\
+{\tt\small hujh@mit.edu}\\
+Team Name: Procrastination
 }
 
 \maketitle
@@ -48,393 +38,186 @@ First line of institution2 address\\
 
 %%%%%%%%% ABSTRACT
 \begin{abstract}
-   The ABSTRACT is to be in fully-justified italicized text, at the top
-   of the left-hand column, below the author and affiliation
-   information. Use the word ``Abstract'' as the title, in 12-point
-   Times, boldface type, centered relative to the column, initially
-   capitalized. The abstract is to be in 10-point, single-spaced type.
-   Leave two blank lines after the Abstract, then begin the main text.
-   Look at previous CVPR abstracts to get a feel for style and length.
+   Deep neural networks have achieved impressive results at image classification tasks. These techniques however require immense amount of training data. In this project, we attempt to achieve good levels of performance with a fraction of the data. The MiniPlaces dataset we use contains only 100,000 images. We implement ResNets of varying depth to see what architecture works best and combat overfitting with heavy data augmentation. We then explore ways to leverage pixel-level object annotations to further improve classification accuracy.
 \end{abstract}
 
 %%%%%%%%% BODY TEXT
 \section{Introduction}
 
-Please follow the steps outlined below when submitting your manuscript to
-the IEEE Computer Society Press.  This style guide now has several
-important modifications (for example, you are no longer warned against the
-use of sticky tape to attach your artwork to the paper), so all authors
-should read this new version.
+Image classification is the classic computer vision task of classifying images into categories. Since 2010, the ImageNet project has hosted the annual ImageNet Large Scale Visual Recognition Challenge (ILSVRC) to tackle this problem. Back then, a good classification error was around 25\%. In 2012, the breakthrough paper Alexnet\cite{alexnet} brought this down to 16\%. It was the first model to use a convolutional neural network (CNN) and one of the first demonstrations of the power of neural networks.
+
+Since then, networks have gotten better but more complex. AlexNet contained 8 layers. VGG19\cite{vgg} and GoogleNet\cite{google} further improved performance and contained 19 and 22 layers respectively. In 2015, ResNet\cite{resnet} became the state-of-the-art by achieving a classification error of 3\%. This is par with human judges. It however used a whopping 152 layers and trained with 10 million images. In this project, we will primarily focus on tuning a smaller version of ResNet to a smaller dataset. We will see what architectures work best and discuss the challenges associated with training on a small dataset.
 
 %-------------------------------------------------------------------------
-\subsection{Language}
+\subsection{MiniPlaces}
 
-All manuscripts must be in English.
+The data for this project comes from the Places2\cite{places} dataset which contains over 10 million images belonging to 400+ categories. Here, we use a subset of this data. The MiniPlaces dataset contains 100,000 images for training, 10,000 images for validation, and 10,000 images for testing, coming from 100 categories. The images have been resized to 128x128 (from 512x512) for better manageability and faster training. 
 
-\subsection{Dual submission}
-
-Please refer to the author guidelines on the CVPR 2017 web page for a
-discussion of the policy on dual submissions.
-
-\subsection{Paper length}
-Papers, excluding the references section,
-must be no longer than eight pages in length. The references section
-will not be included in the page count, and there is no limit on the
-length of the references section. For example, a paper of eight pages
-with two pages of references would have a total length of 10 pages.
-{\bf There will be no extra page charges for
-  CVPR 2017.}
-
-Overlength papers will simply not be reviewed.  This includes papers
-where the margins and formatting are deemed to have been significantly
-altered from those laid down by this style guide.  Note that this
-\LaTeX\ guide already sets figure captions and references in a smaller font.
-The reason such papers will not be reviewed is that there is no provision for
-supervised revisions of manuscripts.  The reviewing process cannot determine
-the suitability of the paper for presentation in eight pages if it is
-reviewed in eleven.  
-
-%-------------------------------------------------------------------------
-\subsection{The ruler}
-The \LaTeX\ style defines a printed ruler which should be present in the
-version submitted for review.  The ruler is provided in order that
-reviewers may comment on particular lines in the paper without
-circumlocution.  If you are preparing a document using a non-\LaTeX\
-document preparation system, please arrange for an equivalent ruler to
-appear on the final output pages.  The presence or absence of the ruler
-should not change the appearance of any other content on the page.  The
-camera ready copy should not contain a ruler. (\LaTeX\ users may uncomment
-the \verb'\cvprfinalcopy' command in the document preamble.)  Reviewers:
-note that the ruler measurements do not align well with lines in the paper
---- this turns out to be very difficult to do well when the paper contains
-many figures and equations, and, when done, looks ugly.  Just use fractional
-references (e.g.\ this line is $095.5$), although in most cases one would
-expect that the approximate location will be adequate.
-
-\subsection{Mathematics}
-
-Please number all of your sections and displayed equations.  It is
-important for readers to be able to refer to any particular equation.  Just
-because you didn't refer to it in the text doesn't mean some future reader
-might not need to refer to it.  It is cumbersome to have to use
-circumlocutions like ``the equation second from the top of page 3 column
-1''.  (Note that the ruler will not be present in the final copy, so is not
-an alternative to equation numbers).  All authors will benefit from reading
-Mermin's description of how to write mathematics:
-\url{http://www.pamitc.org/documents/mermin.pdf}.
-
-
-\subsection{Blind review}
-
-Many authors misunderstand the concept of anonymizing for blind
-review.  Blind review does not mean that one must remove
-citations to one's own work---in fact it is often impossible to
-review a paper unless the previous citations are known and
-available.
-
-Blind review means that you do not use the words ``my'' or ``our''
-when citing previous work.  That is all.  (But see below for
-techreports.)
-
-Saying ``this builds on the work of Lucy Smith [1]'' does not say
-that you are Lucy Smith; it says that you are building on her
-work.  If you are Smith and Jones, do not say ``as we show in
-[7]'', say ``as Smith and Jones show in [7]'' and at the end of the
-paper, include reference 7 as you would any other cited work.
-
-An example of a bad paper just asking to be rejected:
-\begin{quote}
-\begin{center}
-    An analysis of the frobnicatable foo filter.
-\end{center}
-
-   In this paper we present a performance analysis of our
-   previous paper [1], and show it to be inferior to all
-   previously known methods.  Why the previous paper was
-   accepted without this analysis is beyond me.
-
-   [1] Removed for blind review
-\end{quote}
-
-
-An example of an acceptable paper:
-
-\begin{quote}
-\begin{center}
-     An analysis of the frobnicatable foo filter.
-\end{center}
-
-   In this paper we present a performance analysis of the
-   paper of Smith \etal [1], and show it to be inferior to
-   all previously known methods.  Why the previous paper
-   was accepted without this analysis is beyond me.
-
-   [1] Smith, L and Jones, C. ``The frobnicatable foo
-   filter, a fundamental contribution to human knowledge''.
-   Nature 381(12), 1-213.
-\end{quote}
-
-If you are making a submission to another conference at the same time,
-which covers similar or overlapping material, you may need to refer to that
-submission in order to explain the differences, just as you would if you
-had previously published related work.  In such cases, include the
-anonymized parallel submission~\cite{Authors14} as additional material and
-cite it as
-\begin{quote}
-[1] Authors. ``The frobnicatable foo filter'', F\&G 2014 Submission ID 324,
-Supplied as additional material {\tt fg324.pdf}.
-\end{quote}
-
-Finally, you may feel you need to tell the reader that more details can be
-found elsewhere, and refer them to a technical report.  For conference
-submissions, the paper must stand on its own, and not {\em require} the
-reviewer to go to a techreport for further details.  Thus, you may say in
-the body of the paper ``further details may be found
-in~\cite{Authors14b}''.  Then submit the techreport as additional material.
-Again, you may not assume the reviewers will read this material. 
-
-Sometimes your paper is about a problem which you tested using a tool which
-is widely known to be restricted to a single institution.  For example,
-let's say it's 1969, you have solved a key problem on the Apollo lander,
-and you believe that the CVPR70 audience would like to hear about your
-solution.  The work is a development of your celebrated 1968 paper entitled
-``Zero-g frobnication: How being the only people in the world with access to
-the Apollo lander source code makes us a wow at parties'', by Zeus \etal.
-
-You can handle this paper like any other.  Don't write ``We show how to
-improve our previous work [Anonymous, 1968].  This time we tested the
-algorithm on a lunar lander [name of lander removed for blind review]''.
-That would be silly, and would immediately identify the authors. Instead
-write the following:
-\begin{quotation}
-\noindent
-   We describe a system for zero-g frobnication.  This
-   system is new because it handles the following cases:
-   A, B.  Previous systems [Zeus et al. 1968] didn't
-   handle case B properly.  Ours handles it by including
-   a foo term in the bar integral.
-
-   ...
-
-   The proposed system was integrated with the Apollo
-   lunar lander, and went all the way to the moon, don't
-   you know.  It displayed the following behaviours
-   which show how well we solved cases A and B: ...
-\end{quotation}
-As you can see, the above text follows standard scientific convention,
-reads better than the first version, and does not explicitly name you as
-the authors.  A reviewer might think it likely that the new paper was
-written by Zeus \etal, but cannot make any decision based on that guess.
-He or she would have to be sure that no other authors could have been
-contracted to solve problem B.
-
-FAQ: Are acknowledgements OK?  No.  Leave them for the final copy.
-
+Also, some but not all of the images also have object annotations provided. These come in a separate file as a list of polygons. In Section 5, we discuss strategies for incorporating this data into our training process.
 
 \begin{figure}[t]
 \begin{center}
-\fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
-   %\includegraphics[width=0.8\linewidth]{egfigure.eps}
+\includegraphics[width=0.9\linewidth]{images/miniplaces2.png}
 \end{center}
-   \caption{Example of caption.  It is set in Roman so that mathematics
-   (always set in Roman: $B \sin A = A \sin B$) may be included without an
-   ugly clash.}
+   \caption{Sample images from the MiniPlaces dataset.}
 \label{fig:long}
 \label{fig:onecol}
 \end{figure}
 
-\subsection{Miscellaneous}
+%------------------------------------------------------------------------
+\section{Related Work}
 
-\noindent
-Compare the following:\\
-\begin{tabular}{ll}
- \verb'$conf_a$' &  $conf_a$ \\
- \verb'$\mathit{conf}_a$' & $\mathit{conf}_a$
-\end{tabular}\\
-See The \TeX book, p165.
+The current state-of-the-art for image classification are deep residual networks called ResNets. These networks are effective largely because to their immense depth. Researchers have known for years that greater depth gives networks greater representational power.
+This is because in CNNs, lower layers tend to learn local features like edges and corners while higher layers learn larger concepts like faces, cars, and trees. More layers allow the higher layers build off of the activations of the lower layers and learn more complex concepts. 
 
-The space after \eg, meaning ``for example'', should not be a
-sentence-ending space. So \eg is correct, {\em e.g.} is not.  The provided
-\verb'\eg' macro takes care of this.
+Previously, extremely deep networks were impossible to train due to the vanishing gradient problem. Backpropagation over large numbers of layers chained multiplication operations together in such a way that gradients tended to zero. This resulted in inefficient learning. ResNet solved this problem by implementing skip connections. Skip connections allow gradients to propogate both through and around convolutional layers. This allows information from the gradients to travel more easily through the entirety of the network and results in more effective learning. Then, ResNets achieve their results from their sheer depth and representational power.
 
-When citing a multi-author paper, you may save space by using ``et alia'',
-shortened to ``\etal'' (not ``{\em et.\ al.}'' as ``{\em et}'' is a complete word.)
-However, use it only when there are three or more authors.  Thus, the
-following is correct: ``
-   Frobnication has been trendy lately.
-   It was introduced by Alpher~\cite{Alpher02}, and subsequently developed by
-   Alpher and Fotheringham-Smythe~\cite{Alpher03}, and Alpher \etal~\cite{Alpher04}.''
+In this project, we choose to focus on ResNets because they are the state of the art and contain few parameters to optimize. The principles behind skip connections and residual learning is very general so we expect them to work just as well on small datasets.
 
-This is incorrect: ``... subsequently developed by Alpher \etal~\cite{Alpher03} ...''
-because reference~\cite{Alpher03} has just two authors.  If you use the
-\verb'\etal' macro provided, then you need not worry about double periods
-when used at the end of a sentence as in Alpher \etal.
-
-For this citation style, keep multiple citations in numerical (not
-chronological) order, so prefer \cite{Alpher03,Alpher02,Authors14} to
-\cite{Alpher02,Alpher03,Authors14}.
-
-
-\begin{figure*}
+\begin{figure}[t]
 \begin{center}
-\fbox{\rule{0pt}{2in} \rule{.9\linewidth}{0pt}}
+\includegraphics[width=0.8\linewidth]{images/res.png}
 \end{center}
-   \caption{Example of a short caption, which should be centered.}
-\label{fig:short}
-\end{figure*}
+   \caption{Residual learning: a building block}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
 
 %------------------------------------------------------------------------
-\section{Formatting your paper}
+\section{Technical Approach}
+Since the goal of this work is to see how effectively we can learn from a small dataset, we train all networks from scratch, exclusively on MiniPlaces data. Our framework of choice is Keras backed in Tensorflow. From the original paper, there are 5 ResNet architectures to choose from: ResNet18, ResNet34, ResNet50, ResNet101, and Resnet152. Since we have so little data, we expect to need only a small network. Thus, we implemented ResNet18, ResNet34, and ResNet50.
 
-All text must be in a two-column format. The total allowable width of the
-text area is $6\frac78$ inches (17.5 cm) wide by $8\frac78$ inches (22.54
-cm) high. Columns are to be $3\frac14$ inches (8.25 cm) wide, with a
-$\frac{5}{16}$ inch (0.8 cm) space between them. The main title (on the
-first page) should begin 1.0 inch (2.54 cm) from the top edge of the
-page. The second and following pages should begin 1.0 inch (2.54 cm) from
-the top edge. On all pages, the bottom margin should be 1-1/8 inches (2.86
-cm) from the bottom edge of the page for $8.5 \times 11$-inch paper; for A4
-paper, approximately 1-5/8 inches (4.13 cm) from the bottom edge of the
-page.
+During training, we prepared all data on the fly. Preprocessing all the images and their augmentations was not practical due to the amount of data augmentation we had prepared. To reduce the amount of time the program spends at CPU and better use GPU resources, we multithreaded our program and get multiple CPUs to support a single run. As a result, less than $5\%$ of the training time is spent preparing the data. Training times with and without data augmentations are similar.
 
-%-------------------------------------------------------------------------
-\subsection{Margins and page numbering}
+For ResNet18 and ResNet34, we used a batch size of 64. For ResNet50, we used a batch size of 32 since 64 did not fit on our GPU. Every network was trained until convergence, which was at least 100 epochs. Each epoch consists of 2000 iterations. Our final network was a ResNet50 trained for 120 epochs or 33 hours.
 
-All printed material, including text, illustrations, and charts, must be kept
-within a print area 6-7/8 inches (17.5 cm) wide by 8-7/8 inches (22.54 cm)
-high.
-Page numbers should be in footer with page numbers, centered and .75
-inches from the bottom of the page and make it start at the correct page
-number rather than the 4321 in the example.  To do this fine the line (around
-line 23)
-\begin{verbatim}
-%\ifcvprfinal\pagestyle{empty}\fi
-\setcounter{page}{4321}
-\end{verbatim}
-where the number 4321 is your assigned starting page.
-
-Make sure the first page is numbered by commenting out the first page being
-empty on line 46
-\begin{verbatim}
-%\thispagestyle{empty}
-\end{verbatim}
-
-
-%-------------------------------------------------------------------------
-\subsection{Type-style and fonts}
-
-Wherever Times is specified, Times Roman may also be used. If neither is
-available on your word processor, please use the font closest in
-appearance to Times to which you have access.
-
-MAIN TITLE. Center the title 1-3/8 inches (3.49 cm) from the top edge of
-the first page. The title should be in Times 14-point, boldface type.
-Capitalize the first letter of nouns, pronouns, verbs, adjectives, and
-adverbs; do not capitalize articles, coordinate conjunctions, or
-prepositions (unless the title begins with such a word). Leave two blank
-lines after the title.
-
-AUTHOR NAME(s) and AFFILIATION(s) are to be centered beneath the title
-and printed in Times 12-point, non-boldface type. This information is to
-be followed by two blank lines.
-
-The ABSTRACT and MAIN TEXT are to be in a two-column format.
-
-MAIN TEXT. Type main text in 10-point Times, single-spaced. Do NOT use
-double-spacing. All paragraphs should be indented 1 pica (approx. 1/6
-inch or 0.422 cm). Make sure your text is fully justified---that is,
-flush left and flush right. Please do not place any additional blank
-lines between paragraphs.
-
-Figure and table captions should be 9-point Roman type as in
-Figures~\ref{fig:onecol} and~\ref{fig:short}.  Short captions should be centred.
-
-\noindent Callouts should be 9-point Helvetica, non-boldface type.
-Initially capitalize only the first word of section titles and first-,
-second-, and third-order headings.
-
-FIRST-ORDER HEADINGS. (For example, {\large \bf 1. Introduction})
-should be Times 12-point boldface, initially capitalized, flush left,
-with one blank line before, and one blank line after.
-
-SECOND-ORDER HEADINGS. (For example, { \bf 1.1. Database elements})
-should be Times 11-point boldface, initially capitalized, flush left,
-with one blank line before, and one after. If you require a third-order
-heading (we discourage it), use 10-point Times, boldface, initially
-capitalized, flush left, preceded by one blank line, followed by a period
-and your text on the same line.
-
-%-------------------------------------------------------------------------
-\subsection{Footnotes}
-
-Please use footnotes\footnote {This is what a footnote looks like.  It
-often distracts the reader from the main flow of the argument.} sparingly.
-Indeed, try to avoid footnotes altogether and include necessary peripheral
-observations in
-the text (within parentheses, if you prefer, as in this sentence).  If you
-wish to use a footnote, place it at the bottom of the column on the page on
-which it is referenced. Use Times 8-point type, single-spaced.
-
-
-%-------------------------------------------------------------------------
-\subsection{References}
-
-List and number all bibliographical references in 9-point Times,
-single-spaced, at the end of your paper. When referenced in the text,
-enclose the citation number in square brackets, for
-example~\cite{Authors14}.  Where appropriate, include the name(s) of
-editors of referenced books.
-
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|c|}
-\hline
-Method & Frobnability \\
-\hline\hline
-Theirs & Frumpy \\
-Yours & Frobbly \\
-Ours & Makes one's heart Frob\\
-\hline
+\begin{table}[h]
+\centering
+ \begin{tabular}{||c c c||} 
+ \hline
+ ResNet18 & ResNet34 & ResNet50 \\ [0.5ex] 
+ \hline\hline
+ 300s & 500s & 1000s \\ [1ex] 
+ \hline
 \end{tabular}
+\smallskip
+\caption{Time required to train each epoch.}
+\label{table:1}
+\end{table}
+
+
+%-------------------------------------------------------------------------
+\section{Experiments}
+\subsection{Baseline}
+Keras comes with an implemented version of ResNet50. We choose to use this as our baseline. With no data augmentation, the training and validation errors quickly diverge. The training error heads to zero while the validation error remains at around 75\%.
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\linewidth]{images/baseline.png}
 \end{center}
-\caption{Results.   Ours is better.}
+   \caption{Training and validation error of baseline model.}
+\label{fig:baseline}
+\end{figure}
+
+\subsection{Optimal}
+Before we improve on the baseline with data augmentation, we would like to get an idea of how well we can possible do. Since we are working with a small dataset, we do not expect to outperform networks trained on larger datasets. The features we extract will definitely be of lower quality those extracted by a network trained on a larger dataset. Thus, finetuning a network pretrained on a larger dataset gives us an upper bound on our performance.
+
+With the same ResNet50 in Keras, we import weights from ImageNet with a single line of code. Finetuning this model with no data augmentation, we achieve a validation Top1 error rate of $43\%$ within one epoch. This is significantly better than our baseline. The validation error gradually increases as our network overfits to the training set. 
+
+\subsection{Data Augmentations}
+With the training error approaching 0\%, it is clear the key to improving performance is utilizing a large amount of data augmentation. In total, we implemented 8 types of data augmentation. They are as follows:
+
+\textbf{Flip:} Randomly flip image with probability 0.5.
+
+\textbf{Crop:} Randomly crop the image to 80\% its size.
+
+\textbf{Shift:} Shift image in any direction by 20 pixels.
+
+\textbf{Rotate:} Rotate image between +90 and -90 degrees.
+
+\textbf{Shear:} Slant image by between +30 and -30 degrees.
+
+\textbf{Brightness:} Randomly change the brightness.
+
+\textbf{Contrast:} Randomly change the contrast.
+
+\textbf{Drop pixels:} Randomly set 10\% of the pixels to a random color.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=1.\linewidth]{images/augmentations.png}
+\end{center}
+   \caption{Data augmentations visualized.}
+\label{fig:long}
+\label{fig:onecol}
+\end{figure}
+
+For all networks, the error rate decreased significantly. Looking at ResNet50, the top1 error rate went from 75\% to 63\%, a 12\% improvement over the baseline. From here on out, all networks are trained with the full suite of data augmentations.
+
+\subsection{Varying Depth}
+Smaller ResNets have less representational capacity. This makes them less powerful but also less prone to overfitting. Since we do not have much training data, a smaller network may outperform a larger overfitted network. Here, we find the best performing ResNet is ResNet34.
+
+\begin{table}[h]
+\centering
+ \begin{tabular}{||c c c||} 
+ \hline
+ & Top1 error & Top5 error \\ [0.5ex] 
+ \hline\hline
+ ResNet18 & 0.6368 & 0.331 \\ [1ex] 
+ \hline
+ ResNet34 & \bf{0.6342} & \bf{0.3234} \\ [1ex] 
+ \hline
+ ResNet50 & 0.6542 & 0.3354 \\ [1ex] 
+ \hline
+\end{tabular}
+\smallskip
+\caption{Validation error rates of ResNets trained with data augmentation.}
+\label{table:1}
+\end{table}
+
+
+\subsection{Final Network}
+The best performing network we found is actually slightly different from the ResNets described above. It is a ResNet50 with a larger starting image, 224x224 instead of 128x128. We tested this size because it is the smallest starting shape accepted by the default implementation of ResNet in Keras. For training, we simply resized the image to be larger before doing all the data augmentations. Inexplicably, this network performs better than all the other ResNets. It achieves top1 validation error of $0.5504$ and a top5 error of $0.2516$.
+
+ This result may be because of the larger layers it has. At every layer, this ResNet50 is four times as larger as the other ResNet50. Pooling halves the feature map dimensions of the later layers. It is possible that the pooling in the smaller ResNet50 may collapse the information too far, thus resulting in inferior performance. Unfortunately, due to the time constraints on this project, we were unable to investigate this further.
+
+\begin{table}[h]
+\centering
+ \begin{tabular}{||c c c c||} 
+ \hline
+  & Input size & Top1 error & Top5 error \\ [0.5ex] 
+ \hline\hline
+  ResNet50 & 128x128 & 0.6368 & 0.331 \\ [1ex] 
+ \hline
+ ResNet50 & 224x224 & \bf{0.5504} & \bf{0.2516} \\ [1ex] 
+ \hline
+ Optimal* &  & 0.4323 & 0.1553 \\ [1ex] 
+ \hline
+\end{tabular}
+\smallskip
+\caption{Validation error rates of ResNets with differing input sizes. *Pretrained weights from ImageNet
+}
+
+\label{table:1}
 \end{table}
 
 %-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
+\section{Incorporating Object Annotations}
+As part to the Miniplaces challenge, object annotations are provided for a subset of the images. This data is highly informative because the objects within a scene are highly correlated with the category of the scene. A network that successful utilizes this information could make predictions based on crisp segmentations instead of blurry 128x128 images.
 
-All graphics should be centered.  Please ensure that any point you wish to
-make is resolvable in a printed copy of the paper.  Resize fonts in figures
-to match the font in the body text, and choose line widths which render
-effectively in print.  Many readers (and reviewers), even of an electronic
-copy, will choose to print your paper in order to read it.  You cannot
-insist that they do otherwise, and therefore must not assume that they can
-zoom in to see tiny details on a graphic.
+\subsection{Model}
+We incorporate the object annotations by first converting them into binary masks. For $K$ object categories, we generate $K$binary masks and stack them in the channel dimension to get an input with shape HxWxK. If no object annotation is present for some category, that slice contains only zeros.
 
-When placing figures in \LaTeX, it's almost always best to use
-\verb+\includegraphics+, and to specify the  figure width as a multiple of
-the line width as in the example below
-{\small\begin{verbatim}
-   \usepackage[dvips]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]
-                   {myfile.eps}
-\end{verbatim}
-}
+We then use a two-head ResNet architecture for classification. The idea is to project the image and the binary masks into the same feature space. Working with ResNet50, we take two copies of the first 10 layers of ResNet to form two heads. One converts the image into a feature map of size 32x32x128 while the other converts the binary mask input. Then, we concatenate the two maps and continue through the rest of the ResNet with twice as many channels. Note the first layer of the binary mask head maps $K$ channels to 50 channels while the image head maps $3$ channels to 50 channels.
 
+\subsection{Results}
+Unfortunately, the effect of this new binary mask module on performance is negligible. As only 3\% of the training and validation images have annotations, there may not have been enough data to learn something useful in the second head. There may have been too many parameters for the amount of segmentation data. 
 
-%-------------------------------------------------------------------------
-\subsection{Color}
-
-Please refer to the author guidelines on the CVPR 2017 web page for a discussion
-of the use of color in your document.
+Given more time, we might try something simpler like a single vector saying whether an object annotation category is present. This would be incorporated with a fully connected layer towards the end of the network. Another idea is compress the $K$ channels of the binary masks into smaller $N$ channels where the values in the $N$ channels represent categories are equidistant from each other. These $N$ channels could then be concatenate with the original $3$ RGB channels and run through the original ResNet. All in all though, the limited amount of segmentation data makes any approach difficult.
 
 %------------------------------------------------------------------------
-\section{Final copy}
-
-You must include your signed IEEE copyright release form when you submit
-your finished paper. We MUST have this form before your paper can be
-published in the proceedings.
-
+\section{Conclusion}
+In this project, we attempt to get good performance with ResNets on a small dataset. With our baseline, we got 75\% error rate. At the same time, our training error rate went to zero. To combat this immense overfitting to the data, we implemented several functions for data augmentation. After this, all networks saw a large boost in accuracy. We then tested ResNets of various depths but found they all had similar performance. Lastly, we tried to incorporate object annotations into the classification task but were largely unsuccessful.
 
 {\small
 \bibliographystyle{ieee}
