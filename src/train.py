@@ -14,14 +14,14 @@ from data_generator import DataGenerator
 from network import Network
 
 def train(network, generator, generator_val, checkpoint_dir, initial_epoch=0):
-    filename = "weights.{epoch:02d}-{acc:.4f}-{val_acc:.4f}.hdf5"
+    filename = "weights.{epoch:03d}-{acc:.4f}-{val_acc:.4f}.hdf5"
     checkpoint_path = os.path.join(checkpoint_dir, filename)
 
     checkpoint = ModelCheckpoint(checkpoint_path, monitor='loss')
     callbacks_list = [checkpoint]
 
     print("Training...")
-    network.model.fit_generator(generator, 2000, epochs=100, callbacks=callbacks_list,
+    network.model.fit_generator(generator, 2000, epochs=1000, callbacks=callbacks_list,
              verbose=1, workers=6, use_multiprocessing=True, initial_epoch=initial_epoch,
              validation_data=generator_val, validation_steps=50)
 

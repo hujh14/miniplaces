@@ -34,7 +34,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def DataGenerator(data_loader, batch_size=64, use_augment=True):
+def DataGenerator(data_loader, batch_size=32, use_augment=True):
     while True:
         datas = []
         labels = []

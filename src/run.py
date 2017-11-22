@@ -37,20 +37,24 @@ if __name__ == "__main__":
         top5 = 0
         for n, im in enumerate(data_loader.im_list):
             img = data_loader.get_image(im)
-            ans = data_loader.labels[im]
 
             predictions = network.predict(img)
             # Write output
             output = "{} {}".format(im, " ".join([str(c) for c in predictions]))
-            
-            if ans == predictions[0]:
-                top1 += 1
-            if ans in predictions:
-                top5 += 1
-
-            print output, 1.*top1/(n+1), 1.*top5/(n+1)
+            print output
             with open(args.output_path, 'a') as f:
                 f.write(output + '\n')
-
+            if args.split != "test":
+                ans = data_loader.labels[im]           
+                if ans == predictions[0]:
+                    top1 += 1
+                if ans in predictions:
+                    top5 += 1
+                print output, 1.*top1/(n+1), 1.*top5/(n+1)
+        if args.split != "test":
+            with open(args.output_path, 'a') as f:
+                top1_error = 1 - 1.*top1/(n+1)
+                top5_error = 1 - 1.*top5/(n+1)
+                f.write('{} {}\n'.format(top1_error, top5_error))
 
 
