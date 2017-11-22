@@ -26,7 +26,7 @@ if __name__ == "__main__":
     data_loader = DataLoader(args.split)
 
     sess = tf.Session()
-   K.set_session(sess)
+    K.set_session(sess)
     with sess.as_default():
         print(args)
 

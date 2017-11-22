@@ -4,7 +4,7 @@ import numpy as np
 from scipy import misc
 import matplotlib.pyplot as plt
 import cv2
-import xmltodict
+#import xmltodict
 
 import utils
 
@@ -26,10 +26,6 @@ class DataLoader:
     def get_image(self, im):
         path = os.path.join(self.image_dir, im)
         img = misc.imread(path)
-
-        imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        ret,thresh = cv2.threshold(imgray,127,255,0)
-        contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
         return img
 
     def get_label(self, im):
